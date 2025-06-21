@@ -49,11 +49,10 @@ jlink {
         // macOS specific options
         installerOptions = [
             '--mac-package-identifier', 'com.example.csvmonitor',
-            '--mac-sign', // Remove this if you don't have a signing certificate
-            '--mac-signing-key-user-name', 'Your Developer ID' // Replace with your actual developer ID or remove
         ]
         
         // Optional: Add an icon
-        // icon = 'src/main/resources/app.icns'
+        icon = 'src/main/resources/icon.icns'
+        
     }
 }
