@@ -21,6 +21,7 @@ java {
 
 application {
     mainClass = 'csvmonitorproject.App'
+    mainModule = 'csvmonitor'
 }
 
 tasks.named('test') {
@@ -30,17 +31,29 @@ tasks.named('test') {
 // Configure Badass JLink Plugin
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
-
+    
+    // Add modules that your application needs
+    addExtraModulePath 'build/libs'
+    
     launcher {
-        name = 'csvmonitor' // the command name of the launcher
+        name = 'csvmonitor'
     }
 
     jpackage {
         imageName = 'CSV Monitor'
         installerName = 'CSV Monitor'
-        installerType = 'dmg' // macOS installer (alternatives: pkg, exe, msi, deb, rpm)
+        installerType = 'dmg'
         skipInstaller = false
         appVersion = '1.0.0'
-        // Optional: icon = 'src/main/resources/app.icns'
+        
+        // macOS specific options
+        installerOptions = [
+            '--mac-package-identifier', 'com.example.csvmonitor',
+            '--mac-sign', // Remove this if you don't have a signing certificate
+            '--mac-signing-key-user-name', 'Your Developer ID' // Replace with your actual developer ID or remove
+        ]
+        
+        // Optional: Add an icon
+        // icon = 'src/main/resources/app.icns'
     }
 }
