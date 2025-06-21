@@ -1,0 +1,46 @@
+plugins {
+    id 'application'
+    id 'org.beryx.jlink' version '3.0.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation libs.junit.jupiter
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation libs.guava
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+application {
+    mainClass = 'csvmonitorproject.App'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Configure Badass JLink Plugin
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+
+    launcher {
+        name = 'csvmonitor' // the command name of the launcher
+    }
+
+    jpackage {
+        imageName = 'CSV Monitor'
+        installerName = 'CSV Monitor'
+        installerType = 'dmg' // macOS installer (alternatives: pkg, exe, msi, deb, rpm)
+        skipInstaller = false
+        appVersion = '1.0.0'
+        // Optional: icon = 'src/main/resources/app.icns'
+    }
+}
