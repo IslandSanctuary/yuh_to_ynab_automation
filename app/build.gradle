@@ -16,11 +16,13 @@ dependencies {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+        // Vendor can be specified if needed
+        // vendor = JvmVendorSpec.ADOPTIUM
     }
 }
 
 application {
-    mainClass = 'csvmonitorproject.App'
+    mainClass = 'com.example.csvmonitor.CsvFolderMonitor'
     mainModule = 'csvmonitor'
 }
 
@@ -28,31 +30,69 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-// Configure Badass JLink Plugin
+// Configure Badass JLink Plugin for Docker-like CLI installation
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     
-    // Add modules that your application needs
-    addExtraModulePath 'build/libs'
+    // Remove hardcoded path - let toolchain handle it
+    // javaHome = '/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home'
     
     launcher {
         name = 'csvmonitor'
     }
-
+    
     jpackage {
+        // App will be installed in /Applications
         imageName = 'CSV Monitor'
-        installerName = 'CSV Monitor'
-        installerType = 'dmg'
+        installerName = 'CSV Monitor CLI'
+        installerType = 'pkg'
         skipInstaller = false
         appVersion = '1.0.0'
         
-        // macOS specific options
+        // macOS specific options with resource directory for scripts
         installerOptions = [
             '--mac-package-identifier', 'com.example.csvmonitor',
+            '--mac-package-name', 'CSV Monitor CLI',
+            '--install-dir', '/Applications',
+            '--resource-dir', 'src/main/resources/package'
         ]
         
-        // Optional: Add an icon
-        icon = 'src/main/resources/icon.icns'
+        // Optional: Add icon for the app bundle
+        // icon = 'src/main/resources/icon.icns'
+    }
+}
+
+// Create custom runtime image task (alternative approach)
+tasks.register('createRuntimeImage') {
+    dependsOn 'jlinkZip'
+    doLast {
+        println "Runtime image created. You can distribute this as a simple archive."
+    }
+}
+
+// Debug task to show Java configuration
+tasks.register('showJavaConfig') {
+    doLast {
+        println "Java Home: ${System.getProperty('java.home')}"
+        println "Java Version: ${System.getProperty('java.version')}"
+        println "Gradle Java Toolchain: ${java.toolchain.languageVersion.get()}"
         
+        def jmodsDir = new File("${System.getProperty('java.home')}/jmods")
+        println "JMods directory exists: ${jmodsDir.exists()}"
+        if (jmodsDir.exists()) {
+            println "JMods directory: ${jmodsDir.absolutePath}"
+            println "JMods files: ${jmodsDir.list()?.take(5)}"
+        }
+    }
+}
+
+// Task to prepare package resources
+tasks.register('preparePackageResources') {
+    doLast {
+        def resourceDir = file('src/main/resources/package')
+        resourceDir.mkdirs()
+        
+        // This will be handled in step-by-step instructions
+        println "Package resources directory created: ${resourceDir.absolutePath}"
     }
 }

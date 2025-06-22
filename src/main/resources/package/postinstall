@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Post-install script for CSV Monitor CLI
+# This file must be named exactly "postinstall" (no extension)
+
+set -e
+
+APP_NAME="CSV Monitor"
+CLI_NAME="csvmonitor"
+INSTALL_DIR="/Applications/${APP_NAME}.app"
+SYMLINK_DIR="/usr/local/bin"
+EXECUTABLE_PATH="${INSTALL_DIR}/Contents/MacOS/${CLI_NAME}"
+
+# Log to system log for debugging
+logger "CSV Monitor: Starting post-install script"
+
+# Create /usr/local/bin if it doesn't exist
+if [ ! -d "$SYMLINK_DIR" ]; then
+    logger "CSV Monitor: Creating $SYMLINK_DIR directory"
+    mkdir -p "$SYMLINK_DIR"
+fi
+
+# Remove existing symlink if it exists
+if [ -L "$SYMLINK_DIR/$CLI_NAME" ]; then
+    logger "CSV Monitor: Removing existing symlink"
+    rm -f "$SYMLINK_DIR/$CLI_NAME"
+fi
+
+# Create new symlink
+if [ -f "$EXECUTABLE_PATH" ]; then
+    logger "CSV Monitor: Creating symlink $SYMLINK_DIR/$CLI_NAME -> $EXECUTABLE_PATH"
+    ln -sf "$EXECUTABLE_PATH" "$SYMLINK_DIR/$CLI_NAME"
+    
+    # Make sure the symlink target is executable
+    chmod +x "$EXECUTABLE_PATH"
+    
+    logger "CSV Monitor: Post-install completed successfully"
+else
+    logger "CSV Monitor: ERROR - Executable not found at $EXECUTABLE_PATH"
+    exit 1
+fi
+
+exit 0

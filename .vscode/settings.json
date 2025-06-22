@@ -1,4 +1,21 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "java.compile.nullAnalysis.mode": "automatic"
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-21",
+      "path": "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home",
+      "javadoc": "https://docs.oracle.com/en/java/javase/21/docs/api",
+      "default": true
+    },
+    {
+      "name": "JavaSE-24",
+      "path": "/Library/Java/JavaVirtualMachines/temurin-24.jdk/Contents/Home",
+      "javadoc": "https://docs.oracle.com/en/java/javase/24/docs/api"
+    }
+  ],
+  "java.jdt.ls.java.home": "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable",
+    "terminal.explorerKind": "external",
+    "terminal.integrated.shellIntegration.enabled": false,
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
