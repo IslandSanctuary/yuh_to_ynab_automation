@@ -3,7 +3,12 @@ package com.example.csvmonitor;
 import java.io.IOException;
 import java.nio.file.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class CsvFolderMonitor {
+    private static final Logger logger = LogManager.getLogger(CsvFolderMonitor.class);
+
     public static void main(String[] args) throws IOException, InterruptedException {
         Path folder = Paths.get(args.length > 0 ? args[0] : System.getProperty("user.home"));
         CsvParser parser = new MockCsvParser();
@@ -12,7 +17,7 @@ public class CsvFolderMonitor {
         WatchService watchService = FileSystems.getDefault().newWatchService();
         folder.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
-        System.out.println("Watching folder: " + folder.toAbsolutePath());
+        logger.info("Watching folder: %s", folder.toAbsolutePath());
 
         while (true) {
             WatchKey key = watchService.take();
@@ -21,12 +26,12 @@ public class CsvFolderMonitor {
                     Path filename = (Path) event.context();
                     Path filePath = folder.resolve(filename);
                     if (filename.toString().endsWith(".csv")) {
-                        System.out.println("New file detected: " + filename);
+                        logger.info("New file detected: %s", filename);
                         try {
                             var parsedData = parser.parse(filePath);
                             apiClient.send(parsedData);
                         } catch (Exception e) {
-                            System.err.println("Failed to process file: " + e.getMessage());
+                            logger.error("Failed to process file: %s", e.getMessage());
                         }
                     }
                 }

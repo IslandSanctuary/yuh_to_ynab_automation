@@ -5,8 +5,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class MockCsvParser implements CsvParser {
+    private static Logger logger = LogManager.getLogger(MockCsvParser.class);
+
     public List<Map<String, String>> parse(Path csvFilePath) throws Exception {
+        logger.info("Parsing file: %s", csvFilePath.getFileName());
         List<Map<String, String>> result = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(csvFilePath)) {
             String[] headers = reader.readLine().split(",");

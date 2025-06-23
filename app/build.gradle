@@ -8,6 +8,13 @@ repositories {
 }
 
 dependencies {
+    // Log4j2 BOM to manage versions consistently
+    implementation platform('org.apache.logging.log4j:log4j-bom:2.25.0')
+    
+    // Log4j2 dependencies (versions managed by BOM)
+    implementation 'org.apache.logging.log4j:log4j-core'
+    implementation 'org.apache.logging.log4j:log4j-api'
+
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation libs.guava
