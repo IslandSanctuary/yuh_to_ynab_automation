@@ -12,8 +12,11 @@ dependencies {
     implementation platform('org.apache.logging.log4j:log4j-bom:2.25.0')
     
     // Log4j2 dependencies (versions managed by BOM)
-    implementation 'org.apache.logging.log4j:log4j-core'
     implementation 'org.apache.logging.log4j:log4j-api'
+    runtimeOnly 'org.apache.logging.log4j:log4j-core'
+
+    // Apache Commons CSV library
+    implementation 'org.apache.commons:commons-csv:1.10.0'
 
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -21,10 +24,11 @@ dependencies {
 }
 
 java {
+    modularity.inferModulePath = true
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
         // Vendor can be specified if needed
-        // vendor = JvmVendorSpec.ADOPTIUM
+        vendor = JvmVendorSpec.ADOPTIUM
     }
 }
 
@@ -49,12 +53,14 @@ jlink {
     }
     
     jpackage {
+        forceMerge 'org.apache.logging.log4j.core'
         // App will be installed in /Applications
         imageName = 'CSV Monitor'
         installerName = 'CSV Monitor CLI'
         installerType = 'pkg'
         skipInstaller = false
         appVersion = '1.0.0'
+        
         
         // macOS specific options with resource directory for scripts
         installerOptions = [
@@ -92,6 +98,7 @@ tasks.register('showJavaConfig') {
         }
     }
 }
+
 
 // Task to prepare package resources
 tasks.register('preparePackageResources') {
