@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MockApiClient implements ApiClient {
-    private static Logger logger = LogManager.getLogger(MockApiClient.class);
+    private static final Logger logger = LogManager.getLogger(MockApiClient.class);
 
     public void send(List<Map<String, String>> parsedData) {
         if (parsedData.isEmpty()) {

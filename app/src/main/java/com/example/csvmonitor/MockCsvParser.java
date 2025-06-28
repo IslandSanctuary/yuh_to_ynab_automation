@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MockCsvParser implements CsvParser {
-    private static Logger logger = LogManager.getLogger(MockCsvParser.class);
+    private static final Logger logger = LogManager.getLogger(MockCsvParser.class);
 
     public List<Map<String, String>> parse(Path csvFilePath) throws Exception {
         logger.info("Parsing file: {}", csvFilePath.getFileName());
