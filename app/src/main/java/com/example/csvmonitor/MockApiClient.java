@@ -16,7 +16,7 @@ public class MockApiClient implements ApiClient {
         }
 
         logger.info("Sending data to API...");
-        logger.info("Headers: {}", parsedData.get(0).keySet());
+        logger.info("Headers: {}", parsedData.getFirst().keySet());
 
         int previewLimit = Math.min(3, parsedData.size());
         for (int i = 0; i < previewLimit; i++) {
