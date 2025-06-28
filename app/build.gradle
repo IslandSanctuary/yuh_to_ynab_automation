@@ -13,7 +13,7 @@ dependencies {
     
     // Log4j2 dependencies (versions managed by BOM)
     implementation 'org.apache.logging.log4j:log4j-api'
-    runtimeOnly 'org.apache.logging.log4j:log4j-core'
+    implementation 'org.apache.logging.log4j:log4j-core'
 
     // Apache Commons CSV library
     implementation 'org.apache.commons:commons-csv:1.10.0'
@@ -43,7 +43,7 @@ tasks.named('test') {
 
 // Configure Badass JLink Plugin for Docker-like CLI installation
 jlink {
-    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    options = ['--strip-debug', '--compress', 'zip-6', '--no-header-files', '--no-man-pages']
     
     // Remove hardcoded path - let toolchain handle it
     // javaHome = '/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home'
@@ -108,5 +108,36 @@ tasks.register('preparePackageResources') {
         
         // This will be handled in step-by-step instructions
         println "Package resources directory created: ${resourceDir.absolutePath}"
+    }
+}
+
+tasks.register('debugModules') {
+    doLast {
+        configurations.runtimeClasspath.files.forEach { file ->
+            if (file.name.contains('log4j')) {
+                println "Log4j JAR: ${file.name}"
+                if (file.name.endsWith('.jar')) {
+                    def jarFile = new java.util.jar.JarFile(file)
+                    def moduleInfo = jarFile.getEntry('module-info.class')
+                    if (moduleInfo) {
+                        println "  - Has module-info.class"
+                    } else {
+                        println "  - Automatic module"
+                    }
+                    
+                    // Check for service providers
+                    def servicesDir = jarFile.entries().findAll { 
+                        it.name.startsWith('META-INF/services/') 
+                    }
+                    if (!servicesDir.isEmpty()) {
+                        println "  - Service providers found:"
+                        servicesDir.each { entry ->
+                            println "    ${entry.name}"
+                        }
+                    }
+                    jarFile.close()
+                }
+            }
+        }
     }
 }

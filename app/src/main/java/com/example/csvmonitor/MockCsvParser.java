@@ -12,7 +12,7 @@ public class MockCsvParser implements CsvParser {
     private static Logger logger = LogManager.getLogger(MockCsvParser.class);
 
     public List<Map<String, String>> parse(Path csvFilePath) throws Exception {
-        logger.info("Parsing file: %s", csvFilePath.getFileName());
+        logger.info("Parsing file: {}", csvFilePath.getFileName());
         List<Map<String, String>> result = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(csvFilePath)) {
             String[] headers = reader.readLine().split(",");

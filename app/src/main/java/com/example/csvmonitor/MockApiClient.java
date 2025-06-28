@@ -16,11 +16,11 @@ public class MockApiClient implements ApiClient {
         }
 
         logger.info("Sending data to API...");
-        logger.info("Headers: %s", parsedData.get(0).keySet());
+        logger.info("Headers: {}", parsedData.get(0).keySet());
 
         int previewLimit = Math.min(3, parsedData.size());
         for (int i = 0; i < previewLimit; i++) {
-            logger.info("Row %d: %s", (i + 1), parsedData.get(i));
+            logger.info("Row {}: {}", (i + 1), parsedData.get(i));
         }
     }
 }

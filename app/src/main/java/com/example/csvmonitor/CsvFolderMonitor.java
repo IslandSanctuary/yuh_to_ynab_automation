@@ -17,7 +17,7 @@ public class CsvFolderMonitor {
         WatchService watchService = FileSystems.getDefault().newWatchService();
         folder.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
-        logger.info("Watching folder: %s", folder.toAbsolutePath());
+        logger.info("Watching folder: {}", folder.toAbsolutePath());
 
         while (true) {
             WatchKey key = watchService.take();
@@ -26,12 +26,12 @@ public class CsvFolderMonitor {
                     Path filename = (Path) event.context();
                     Path filePath = folder.resolve(filename);
                     if (filename.toString().endsWith(".csv")) {
-                        logger.info("New file detected: %s", filename);
+                        logger.info("New file detected: {}", filename);
                         try {
                             var parsedData = parser.parse(filePath);
                             apiClient.send(parsedData);
                         } catch (Exception e) {
-                            logger.error("Failed to process file: %s", e.getMessage());
+                            logger.error("Failed to process file: {}", e.getMessage());
                         }
                     }
                 }
