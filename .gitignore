@@ -88,3 +88,4 @@ nb-configuration.xml
 ## Miscellaneous
 ##############################
 *.log
+/app/src/main/resources/ynab-openapi.yaml
