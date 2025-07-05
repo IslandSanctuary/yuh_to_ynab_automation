@@ -1,7 +1,6 @@
 plugins {
     id 'application'
     id 'org.beryx.jlink' version '3.0.1'
-    id 'org.openapi.generator' version '7.14.0'
 }
 
 repositories {
@@ -23,38 +22,9 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation libs.guava
 
-    // Api client composite build
-    //implementation 'com.ynab.client:ynab-api-client:1.0.0'
 }
 
-openApiGenerate {
-    generatorName = 'java'
 
-    // IMPORTANT: Path to your existing OpenAPI specification
-    inputSpec = "$projectDir/src/main/resources/ynab-openapi.yaml"
-
-    // IMPORTANT: Where the new module will be generated
-    outputDir = "$rootDir/ynab-api-client"
-
-    // These settings define the identity of the generated module
-    groupId = 'com.example.ynab-api-client'
-    id = 'ynab-api-client'
-    version = '1.0.0'
-
-    // Define the package structure for the generated code
-    apiPackage = 'com.example.ynab-api-client.client.api'
-    modelPackage = 'com.example.ynab-api-client.client.model'
-    invokerPackage = 'com.example.ynab-api-client.client.invoker'
-
-    // Configuration for a modern, dependency-free Java 11+ client
-    configOptions = [
-            dateLibrary: 'java8',
-            library: 'native',
-            useJakartaEe: 'true'
-    ]
-}
-
-compileJava.dependsOn tasks.named("openApiGenerate")
 
 java {
     modularity.inferModulePath = true

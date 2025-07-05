@@ -12,7 +12,3 @@ plugins {
 
 rootProject.name = 'CsvMonitorProject'
 include('app')
-
-// This tells Gradle to include the 'api-client' project as a separate,
-// self-contained build. This is the core of the composite build setup.
-includeBuild 'ynab-api-client'
