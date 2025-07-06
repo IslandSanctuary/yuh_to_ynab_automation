@@ -1,4 +1,4 @@
-module csvmonitor {
+module yuhnab {
     requires java.base;
     requires org.apache.logging.log4j;
     requires org.apache.logging.log4j.core;
@@ -10,5 +10,9 @@ module csvmonitor {
     requires com.google.gson;
     requires kotlin.stdlib;
 
-    exports com.example.csvmonitor;
+    exports ch.orthogonal.yuhnab;
+    exports ch.orthogonal.yuhnab.config;
+    exports ch.orthogonal.yuhnab.service;
+    exports ch.orthogonal.yuhnab.parser;
+    exports ch.orthogonal.yuhnab.client;
 }

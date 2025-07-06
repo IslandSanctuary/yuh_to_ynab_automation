@@ -10,7 +10,7 @@
 
     <Loggers>
         <!-- Application specific logger -->
-        <Logger name="com.example.csvmonitor" level="INFO" additivity="false">
+        <Logger name="ch.orthogonal.yuhnab" level="INFO" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 

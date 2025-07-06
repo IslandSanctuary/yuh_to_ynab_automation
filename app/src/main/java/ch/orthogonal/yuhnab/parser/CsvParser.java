@@ -1,4 +1,4 @@
-package com.example.csvmonitor;
+package ch.orthogonal.yuhnab.parser;
 
 import java.nio.file.Path;
 import java.util.List;

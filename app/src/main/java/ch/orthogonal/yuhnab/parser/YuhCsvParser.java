@@ -1,4 +1,4 @@
-package com.example.csvmonitor;
+package ch.orthogonal.yuhnab.parser;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;

@@ -1,4 +1,4 @@
-package com.example.csvmonitor;
+package ch.orthogonal.yuhnab.parser;
 
 import com.google.gson.annotations.SerializedName;
 

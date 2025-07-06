@@ -45,8 +45,8 @@ java {
 }
 
 application {
-    mainClass = 'com.example.csvmonitor.CsvFolderMonitor'
-    mainModule = 'csvmonitor'
+    mainClass = 'ch.orthogonal.yuhnab.Main'
+    mainModule = 'yuhnab'
 }
 
 tasks.named('test') {
@@ -62,14 +62,14 @@ jlink {
     // javaHome = '/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home'
     
     launcher {
-        name = 'csvmonitor'
+        name = 'yuhnab'
     }
 
     jpackage {
         forceMerge 'org.apache.logging.log4j.core'
         // App will be installed in /Applications
-        imageName = 'CSV Monitor'
-        installerName = 'CSV Monitor CLI'
+        imageName = 'yuhnab'
+        installerName = 'yuhnab-installer'
         installerType = 'pkg'
         skipInstaller = false
         appVersion = '1.0.0'
@@ -77,8 +77,8 @@ jlink {
         
         // macOS specific options with resource directory for scripts
         installerOptions = [
-            '--mac-package-identifier', 'com.example.csvmonitor',
-            '--mac-package-name', 'CSV Monitor CLI',
+            '--mac-package-identifier', 'ch.orthogonal.yuhnab',
+            '--mac-package-name', 'yuhnab',
             '--install-dir', '/Applications',
             '--resource-dir', 'src/main/resources/package'
         ]
