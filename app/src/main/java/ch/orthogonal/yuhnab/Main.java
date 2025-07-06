@@ -8,6 +8,7 @@ import ch.orthogonal.yuhnab.parser.YuhCsvParser;
 import ch.orthogonal.yuhnab.service.CsvFolderMonitor;
 import ch.orthogonal.yuhnab.service.MonitoringService;
 import ch.orthogonal.yuhnab.service.TransactionPipeline;
+import ch.orthogonal.yuhnab.util.JsonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +24,7 @@ public class Main {
         Path home = Paths.get(System.getProperty("user.home"));
         Path folder = Paths.get(args.length > 0 ? args[0] : System.getProperty("user.home"));
         Path configPath = home.resolve(".config").resolve("yuhnab").resolve("config.json");
-        ServiceConfig config = ServiceConfig.fromJson(configPath);
+        ServiceConfig config = JsonUtils.getInstanceFromJson(configPath, ServiceConfig.class);
         CsvParser parser = new YuhCsvParser();
         ApiClient apiClient = new YnabTransactionsClient();
         TransactionPipeline pipeline = new TransactionPipeline(parser, apiClient, config);
