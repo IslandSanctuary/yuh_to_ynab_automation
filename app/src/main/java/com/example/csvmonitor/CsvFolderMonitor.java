@@ -1,10 +1,10 @@
 package com.example.csvmonitor;
 
-import java.io.IOException;
-import java.nio.file.*;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.nio.file.*;
 
 public class CsvFolderMonitor {
     private static final Logger logger = LogManager.getLogger(CsvFolderMonitor.class);

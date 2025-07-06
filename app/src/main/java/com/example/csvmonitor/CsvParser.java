@@ -5,5 +5,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface CsvParser {
-    List<Map<String, String>> parse(Path csvFilePath) throws Exception;
+    List<Map<String, Object>> parse(Path csvFilePath) throws Exception;
 }

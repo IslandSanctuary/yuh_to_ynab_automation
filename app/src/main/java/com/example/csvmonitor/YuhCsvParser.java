@@ -1,18 +1,22 @@
 package com.example.csvmonitor;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class YuhCsvParser implements CsvParser {
     private static final Logger logger = LogManager.getLogger(YuhCsvParser.class);
@@ -21,10 +25,10 @@ public class YuhCsvParser implements CsvParser {
     private static final DateTimeFormatter OUTPUT_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
-    public List<Map<String, String>> parse(Path csvFilePath) throws Exception {
+    public List<Map<String, Object>> parse(Path csvFilePath) throws Exception {
         logger.info("Parsing file: {}", csvFilePath.getFileName());
 
-        List<Map<String, String>> result = new ArrayList<>();
+        List<Map<String, Object>> result = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(csvFilePath)) {
             // Use semicolon delimiter and enable double quote handling
@@ -33,7 +37,7 @@ public class YuhCsvParser implements CsvParser {
 
             try (CSVParser csvParser = new CSVParser(reader, format)) {
                 for (CSVRecord record : csvParser) {
-                    Map<String, String> transformedRow = transformRow(record);
+                    Map<String, Object> transformedRow = transformRow(record);
                     result.add(transformedRow);
                 }
             }
@@ -42,7 +46,7 @@ public class YuhCsvParser implements CsvParser {
         return result;
     }
 
-    private Map<String, String> transformRow(CSVRecord record) {
+    private Map<String, Object> transformRow(CSVRecord record) {
         // Create a normalized map with cleaned keys and values
         Map<String, String> normalizedRow = new LinkedHashMap<>();
 
@@ -56,7 +60,7 @@ public class YuhCsvParser implements CsvParser {
         }
 
         // Transform the row according to YNAB format
-        Map<String, String> result = new LinkedHashMap<>();
+        Map<String, Object> result = new LinkedHashMap<>();
 
         // 1) Date: DD/MM/YYYY -> YYYY-MM-DD
         String dateStr = transformDate(normalizedRow.get("DATE"));
@@ -70,6 +74,7 @@ public class YuhCsvParser implements CsvParser {
         String[] outflowInflow = calculateOutflowInflow(normalizedRow);
         result.put("Outflow", outflowInflow[0]);
         result.put("Inflow", outflowInflow[1]);
+        result.put("Amount", calculateAmount(result.get("Inflow").toString(), result.get("Outflow").toString()));
 
         return result;
     }
@@ -121,8 +126,8 @@ public class YuhCsvParser implements CsvParser {
         String outflow = "";
         String inflow = "";
 
-        String debit = normalizedRow.getOrDefault("DEBIT", "");
-        String credit = normalizedRow.getOrDefault("CREDIT", "");
+        String debit = normalizedRow.getOrDefault("DEBIT", "0");
+        String credit = normalizedRow.getOrDefault("CREDIT", "0");
         String activityType = normalizedRow.getOrDefault("ACTIVITY TYPE", "");
 
         boolean isAutoGoal = "GOAL_AUTO_DEPOSIT".equals(activityType);
@@ -147,9 +152,23 @@ public class YuhCsvParser implements CsvParser {
 
         // Handle GOAL_AUTO_DEPOSIT case: swap outflow and inflow
         if (isAutoGoal) {
-            return new String[] { inflow, outflow };
+            return new String[]{inflow, outflow};
         } else {
-            return new String[] { outflow, inflow };
+            return new String[]{outflow, inflow};
         }
+    }
+
+    private static int calculateAmount(String inflow, String outflow) {
+        int inflowValue = (inflow == null || inflow.isEmpty()) ? 0 : parseToThousands(inflow);
+        int outflowValue = (outflow == null || outflow.isEmpty()) ? 0 : parseToThousands(outflow);
+        return inflowValue - outflowValue;
+    }
+
+    private static int parseToThousands(String value) {
+        if (value.contains(".")) {
+            String[] parts = value.split("\\.");
+            return Integer.parseInt(parts[0]) * 1000 + Integer.parseInt(parts[1]) * 10;
+        }
+        return Integer.parseInt(value) * 1000;
     }
 }

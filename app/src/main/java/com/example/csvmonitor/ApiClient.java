@@ -4,5 +4,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface ApiClient {
-    void send(List<Map<String, String>> parsedData);
+    void send(List<Map<String, Object>> parsedData);
 }

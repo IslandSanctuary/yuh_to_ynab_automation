@@ -1,15 +1,15 @@
 package com.example.csvmonitor;
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.Map;
 
 public class MockApiClient implements ApiClient {
     private static final Logger logger = LogManager.getLogger(MockApiClient.class);
 
-    public void send(List<Map<String, String>> parsedData) {
+    public void send(List<Map<String, Object>> parsedData) {
         if (parsedData.isEmpty()) {
             logger.info("No data to send.");
             return;
