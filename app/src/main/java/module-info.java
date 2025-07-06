@@ -9,6 +9,11 @@ module yuhnab {
     requires okhttp3;
     requires com.google.gson;
     requires kotlin.stdlib;
+    requires java.security.jgss;
+    requires java.security.sasl;
+    requires jdk.crypto.ec;
+    requires jdk.crypto.cryptoki;
+    requires java.net.http;
 
     exports ch.orthogonal.yuhnab;
     exports ch.orthogonal.yuhnab.config;
