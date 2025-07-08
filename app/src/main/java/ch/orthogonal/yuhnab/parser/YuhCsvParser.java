@@ -24,6 +24,20 @@ public class YuhCsvParser implements CsvParser {
     private static final DateTimeFormatter INPUT_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter OUTPUT_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    private static int calculateAmount(String inflow, String outflow) {
+        int inflowValue = (inflow == null || inflow.isEmpty()) ? 0 : parseToThousands(inflow);
+        int outflowValue = (outflow == null || outflow.isEmpty()) ? 0 : parseToThousands(outflow);
+        return inflowValue - outflowValue;
+    }
+
+    private static int parseToThousands(String value) {
+        if (value.contains(".")) {
+            String[] parts = value.split("\\.");
+            return Integer.parseInt(parts[0]) * 1000 + Integer.parseInt(parts[1]) * 10;
+        }
+        return Integer.parseInt(value) * 1000;
+    }
+
     @Override
     public List<Map<String, Object>> parse(Path csvFilePath) throws Exception {
         logger.info("Parsing file: {}", csvFilePath.getFileName());
@@ -156,19 +170,5 @@ public class YuhCsvParser implements CsvParser {
         } else {
             return new String[]{outflow, inflow};
         }
-    }
-
-    private static int calculateAmount(String inflow, String outflow) {
-        int inflowValue = (inflow == null || inflow.isEmpty()) ? 0 : parseToThousands(inflow);
-        int outflowValue = (outflow == null || outflow.isEmpty()) ? 0 : parseToThousands(outflow);
-        return inflowValue - outflowValue;
-    }
-
-    private static int parseToThousands(String value) {
-        if (value.contains(".")) {
-            String[] parts = value.split("\\.");
-            return Integer.parseInt(parts[0]) * 1000 + Integer.parseInt(parts[1]) * 10;
-        }
-        return Integer.parseInt(value) * 1000;
     }
 }

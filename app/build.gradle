@@ -11,7 +11,7 @@ repositories {
 dependencies {
     // Log4j2 BOM to manage versions consistently
     implementation platform('org.apache.logging.log4j:log4j-bom:2.25.0')
-    
+
     // Log4j2 dependencies (versions managed by BOM)
     implementation 'org.apache.logging.log4j:log4j-api'
     implementation 'org.apache.logging.log4j:log4j-core'
@@ -32,7 +32,6 @@ dependencies {
     implementation libs.guava
 
 }
-
 
 
 java {
@@ -60,7 +59,7 @@ jlink {
     forceMerge 'kotlin'
     // Remove hardcoded path - let toolchain handle it
     // javaHome = '/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home'
-    
+
     launcher {
         name = 'yuhnab'
     }
@@ -73,16 +72,16 @@ jlink {
         installerType = 'pkg'
         skipInstaller = false
         appVersion = '1.0.0'
-        
-        
+
+
         // macOS specific options with resource directory for scripts
         installerOptions = [
-            '--mac-package-identifier', 'ch.orthogonal.yuhnab',
-            '--mac-package-name', 'yuhnab',
-            '--install-dir', '/Applications',
-            '--resource-dir', 'src/main/resources/package'
+                '--mac-package-identifier', 'ch.orthogonal.yuhnab',
+                '--mac-package-name', 'yuhnab',
+                '--install-dir', '/Applications',
+                '--resource-dir', 'src/main/resources/package'
         ]
-        
+
         // Optional: Add icon for the app bundle
         // icon = 'src/main/resources/icon.icns'
     }
@@ -102,7 +101,7 @@ tasks.register('showJavaConfig') {
         println "Java Home: ${System.getProperty('java.home')}"
         println "Java Version: ${System.getProperty('java.version')}"
         println "Gradle Java Toolchain: ${java.toolchain.languageVersion.get()}"
-        
+
         def jmodsDir = new File("${System.getProperty('java.home')}/jmods")
         println "JMods directory exists: ${jmodsDir.exists()}"
         if (jmodsDir.exists()) {
@@ -118,7 +117,7 @@ tasks.register('preparePackageResources') {
     doLast {
         def resourceDir = file('src/main/resources/package')
         resourceDir.mkdirs()
-        
+
         // This will be handled in step-by-step instructions
         println "Package resources directory created: ${resourceDir.absolutePath}"
     }
@@ -137,10 +136,10 @@ tasks.register('debugModules') {
                     } else {
                         println "  - Automatic module"
                     }
-                    
+
                     // Check for service providers
-                    def servicesDir = jarFile.entries().findAll { 
-                        it.name.startsWith('META-INF/services/') 
+                    def servicesDir = jarFile.entries().findAll {
+                        it.name.startsWith('META-INF/services/')
                     }
                     if (!servicesDir.isEmpty()) {
                         println "  - Service providers found:"
