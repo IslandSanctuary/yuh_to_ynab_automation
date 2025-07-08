@@ -1,36 +1,35 @@
 package ch.orthogonal.yuhnab;
 
-import ch.orthogonal.yuhnab.client.ApiClient;
-import ch.orthogonal.yuhnab.client.YnabTransactionsClient;
-import ch.orthogonal.yuhnab.config.ServiceConfig;
-import ch.orthogonal.yuhnab.parser.CsvParser;
-import ch.orthogonal.yuhnab.parser.YuhCsvParser;
-import ch.orthogonal.yuhnab.service.CsvFolderMonitor;
-import ch.orthogonal.yuhnab.service.MonitoringService;
-import ch.orthogonal.yuhnab.service.TransactionPipeline;
-import ch.orthogonal.yuhnab.util.JsonUtils;
+import ch.orthogonal.yuhnab.command.Command;
+import ch.orthogonal.yuhnab.command.CommandException;
+import ch.orthogonal.yuhnab.command.CommandFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Path home = Paths.get(System.getProperty("user.home"));
-        Path folder = Paths.get(args.length > 0 ? args[0] : System.getProperty("user.home"));
-        Path configPath = home.resolve(".config").resolve("yuhnab").resolve("config.json");
-        ServiceConfig config = JsonUtils.getInstanceFromJson(configPath, ServiceConfig.class);
-        CsvParser parser = new YuhCsvParser();
-        ApiClient apiClient = new YnabTransactionsClient();
-        TransactionPipeline pipeline = new TransactionPipeline(parser, apiClient, config);
-        CsvFolderMonitor monitor = new CsvFolderMonitor(pipeline, folder);
-        MonitoringService service = new MonitoringService(monitor);
-        service.start();
+        try {
+            Command command = CommandFactory.createCommand(args);
+            command.execute();
+        } catch (CommandException e) {
+            logger.error("Command failed: {}", e.getMessage());
+            if (e.getCause() != null) {
+                logger.debug("Caused by:", e.getCause());
+            }
+            System.err.println("Error: " + e.getMessage());
+            CommandFactory.printUsage();
+            System.exit(1);
+        } catch (Exception e) {
+            logger.error("Unexpected error", e);
+            System.err.println("Unexpected error occurred. Check logs for details.");
+            System.exit(1);
+        }
+
     }
 
 }
