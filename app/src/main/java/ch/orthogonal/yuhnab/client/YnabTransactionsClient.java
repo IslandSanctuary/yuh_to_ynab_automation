@@ -1,7 +1,7 @@
 package ch.orthogonal.yuhnab.client;
 
 import ch.orthogonal.yuhnab.config.ServiceConfig;
-import ch.orthogonal.yuhnab.parser.SimpleTransaction;
+import ch.orthogonal.yuhnab.parser.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,8 +16,8 @@ public class YnabTransactionsClient implements ApiClient {
     @Override
     public void send(List<Map<String, Object>> rawTransactions, ServiceConfig config) {
         // Convert your incoming data
-        List<SimpleTransaction> transactions = rawTransactions.stream()
-                .map(map -> new SimpleTransaction(config.getAccountId(),
+        List<Transaction> transactions = rawTransactions.stream()
+                .map(map -> new Transaction(config.getAccountId(),
                         map.get("Date").toString(),
                         (int) map.get("Amount"),
                         map.get("Payee").toString(),

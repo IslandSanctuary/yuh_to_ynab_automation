@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 
-public class SimpleTransaction {
-    public static final SimpleTransaction testTransaction = new SimpleTransaction(
+public class Transaction {
+    public static final Transaction testTransaction = new Transaction(
             null,
             "2025-07-06",
             0,
@@ -45,17 +45,17 @@ public class SimpleTransaction {
     public String flagColor = null;
 
     @SerializedName("subtransactions")
-    public List<SimpleTransaction> subtransactions = null;
+    public List<Transaction> subtransactions = null;
 
     @SerializedName("import_id")
     public String importId = null;
 
     // Constructor for the fields actually used
-    public SimpleTransaction(String accountId,
-                             String date,
-                             int amount,
-                             String payeeName,
-                             String memo) {
+    public Transaction(String accountId,
+                       String date,
+                       int amount,
+                       String payeeName,
+                       String memo) {
         this.accountId = accountId;
         this.date = date;
         this.amount = amount;

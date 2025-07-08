@@ -1,7 +1,7 @@
 package ch.orthogonal.yuhnab.client;
 
 import ch.orthogonal.yuhnab.config.ServiceConfig;
-import ch.orthogonal.yuhnab.parser.SimpleTransaction;
+import ch.orthogonal.yuhnab.parser.Transaction;
 import com.google.gson.Gson;
 import okhttp3.*;
 
@@ -24,7 +24,7 @@ class TransactionsApi {
         this.apiToken = Objects.requireNonNull(config.getApiToken(), "API Token cannot be null");
     }
 
-    public String sendTransactions(List<SimpleTransaction> transactions) throws IOException {
+    public String sendTransactions(List<Transaction> transactions) throws IOException {
         String json = gson.toJson(Collections.singletonMap("transactions", transactions));
         RequestBody body = RequestBody.create(json, JSON);
 
