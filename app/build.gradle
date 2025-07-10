@@ -48,6 +48,14 @@ application {
     mainModule = 'yuhnab'
 }
 
+ run {
+    standardInput = System.in
+    if (project.hasProperty('args')) {
+        args project.args.split('\\s+')
+    }
+
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

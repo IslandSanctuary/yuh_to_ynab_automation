@@ -15,6 +15,16 @@ public class CommandFactory {
 
         // Provide the correct command class depending on the arguments
         switch (command) {
+            case "setup":
+                if (args.length < 2) {
+                    throw new CommandException("Setup command requires a folder path. Usage: yuhnab setup <folder_path>");
+                }
+                try {
+                    Path folderPath = Paths.get(args[1]);
+                    return new SetupCommand(folderPath.toString());
+                } catch (InvalidPathException e) {
+                    throw new CommandException("Invalid folder path: " + args[1]);
+                }
             default:
                 // Treat as folder path for monitoring
                 try {
